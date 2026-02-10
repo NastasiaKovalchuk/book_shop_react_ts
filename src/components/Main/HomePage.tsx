@@ -2,12 +2,16 @@ import { useState, useEffect } from "react";
 import { BookCard } from "./BookCard";
 import style from "./Home.module.scss";
 
-interface Book {
-  id: string;
-  volumeInfo: {
-    title: string;
-    authors?: string[];
-    imageLinks?: { thumbnail: string };
+export interface Book {
+  id: number;
+  title: string;
+  authors: {
+    name: string;
+  }[];
+  languages: string[];
+  summaries: string[];
+  formats: {
+    "image/jpeg"?: string;
   };
 }
 
@@ -17,12 +21,11 @@ const Main = () => {
   useEffect(() => {
     const fetchBooks = async (): Promise<void> => {
       try {
-        const url =
-          "https://www.googleapis.com/books/v1/volumes?q=fiction&maxResults=10";
+        const url = "https://gutendex.com/books";
         const res = await fetch(url);
         const data = await res.json();
-        console.log("data.items", data.items);
-        setBooks(data.items || []);
+        console.log("data.items", data.results[0].authors[0].name);
+        setBooks(data.results || []);
       } catch (err) {
         console.error("Ошибка fetch:", err);
       }
@@ -32,7 +35,7 @@ const Main = () => {
   }, []);
 
   return (
-    <div>
+    <div className={style.books_grid}>
       {books.map((book) => {
         return (
           <BookCard

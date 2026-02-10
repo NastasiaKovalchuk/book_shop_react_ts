@@ -1,11 +1,15 @@
 // import style from "./Home.module.scss";
 
 type Book = {
-  id: string;
-  volumeInfo: {
-    title: string;
-    authors?: string[];
-    imageLinks?: { thumbnail: string };
+  id: number;
+  title: string;
+  authors: {
+    name: string;
+  }[];
+  languages: string[];
+  summaries: string[];
+  formats: {
+    "image/jpeg"?: string;
   };
 };
 
@@ -18,11 +22,11 @@ export const BookCard = ({ book }: BookCardProps) => {
   return (
     <div className="bg-white">
       <li key={book.id}>
-        <div>{book.volumeInfo.title}</div>
-        <div>{book.volumeInfo.authors}</div>
+        <div>{book.title}</div>
+        <div>{book.authors?.[0]?.name ?? "Unknown author"}</div>
         <img
-          src={book.volumeInfo.imageLinks?.thumbnail}
-          alt={book.volumeInfo.title}
+          src={book.formats["image/jpeg"]}
+          alt={book.formats["image/jpeg"]}
         />
       </li>
     </div>
