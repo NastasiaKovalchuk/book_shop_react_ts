@@ -1,15 +1,17 @@
 import style from "./Header.module.scss";
 import { FaShoppingCart, FaUser } from "react-icons/fa";
 import { NavBar } from "./NavBar";
+import { useModal } from "../ModalContext";
 
 const Header = () => {
+  const { openLogin, openCatalog } = useModal();
   return (
     <header className={style.header}>
       <div className={style.header_wrapper}>
         <div className={style.logo}>MyShop</div>
         <div>
           <li>
-            <a href="/catalog">Каталог</a>
+            <button onClick={openCatalog}>Catalog</button>
           </li>
         </div>
         <div>
@@ -38,9 +40,10 @@ const Header = () => {
           </form>
         </div>
         <div className={style.actions}>
-          <a href="/login" className={style.action}>
-            <FaUser /> Войти
-          </a>
+          <button onClick={openLogin}>
+            Login
+            <FaUser />
+          </button>
           <a href="/cart" className={style.action}>
             <FaShoppingCart /> Корзина
           </a>
