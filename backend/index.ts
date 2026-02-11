@@ -3,7 +3,7 @@ import cors from "cors";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import { users, User } from "./users";
+import { users, User } from "./users.js";
 
 dotenv.config();
 
