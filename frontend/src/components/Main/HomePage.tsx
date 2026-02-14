@@ -18,15 +18,12 @@ export interface Book {
 const Main = () => {
   const [books, setBooks] = useState<Book[]>([]);
 
-  console.log("render1");
-
   useEffect(() => {
     const fetchBooks = async (): Promise<void> => {
       try {
         const url = "https://gutendex.com/books";
         const res = await fetch(url);
         const data = await res.json();
-        console.log("render2", data.results);
         setBooks(data.results || []);
       } catch (err) {
         console.error("Ошибка fetch:", err);
