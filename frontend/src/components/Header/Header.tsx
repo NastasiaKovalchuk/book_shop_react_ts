@@ -19,7 +19,7 @@ const Header = () => {
             <div className={style.header}>
               <input
                 className={style.header}
-                placeholder="Искать на Литрес"
+                placeholder="Search"
                 name="q"
                 data-testid="search__input"
                 role="combobox"
@@ -32,7 +32,7 @@ const Header = () => {
                 className={style.header}
                 type="submit"
                 data-testid="search__button"
-                aria-label="Найти "
+                aria-label="Search "
               >
                 Найти
               </button>
@@ -40,13 +40,13 @@ const Header = () => {
           </form>
         </div>
         <div className={style.actions}>
+          <a href="/cart" className={style.action}>
+            <FaShoppingCart /> Корзина
+          </a>
           <button onClick={openLogin}>
             Login
             <FaUser />
           </button>
-          <a href="/cart" className={style.action}>
-            <FaShoppingCart /> Корзина
-          </a>
         </div>
       </div>
 

@@ -31,7 +31,9 @@ export const LoginPage = () => {
         },
       );
       const data = await res.json();
+      console.log("checkEmail", data.exists);
       setIsUser(data.exists);
+
       setStep("password");
     } catch (err) {
       console.error("Error fetch:", err);
@@ -47,9 +49,9 @@ export const LoginPage = () => {
     // ---------------- EMAIL STEP ----------------
     if (step === "email") {
       if (!email) {
-        newErrors.email = "Введите почту или логин";
+        newErrors.email = "Enter email";
       } else if (!/^\S+@\S+\.\S+$/.test(email)) {
-        newErrors.email = "Неверный формат почты";
+        newErrors.email = "Invalid mail format";
       }
 
       setErrors(newErrors);
@@ -58,15 +60,15 @@ export const LoginPage = () => {
         await checkEmail(email);
       }
 
-      return; // ⬅️ важно: выходим
+      return;
     }
 
     // ---------------- PASSWORD STEP ----------------
     if (step === "password") {
       if (!password) {
-        newErrors.password = "Введите пароль";
+        newErrors.password = "Enter your password";
       } else if (password.length < 6) {
-        newErrors.password = "Минимум 6 символов";
+        newErrors.password = "Minimum 6 characters";
       }
 
       setErrors(newErrors);
@@ -96,23 +98,22 @@ export const LoginPage = () => {
       );
 
       if (!res.ok) {
-        throw new Error("Invalid credentials");
+        const error = await res.json();
+        console.log("error:", error.message);
+        setErrors({
+          password: error.message,
+        });
+        return;
       }
 
       const data = await res.json();
-
-      console.log("JWT:", data.token);
-
-      // 👉 сохранить токен
       localStorage.setItem("token", data.token);
-
-      // 👉 закрыть модалку
       closeModal();
     } catch (err) {
       console.error("Auth error:", err);
 
       setErrors({
-        password: "Неверный email или пароль",
+        password: "Incorrect email or password",
       });
     }
   };
@@ -160,6 +161,9 @@ export const LoginPage = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter password"
               />
+              {errors.password && (
+                <span className={style["error"]}>{errors.password}</span>
+              )}
             </div>
           )}
           {step === "password" && !isUser && (

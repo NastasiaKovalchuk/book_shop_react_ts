@@ -3,8 +3,6 @@
 import { PageWrapper } from "./components/PageWrapper";
 
 function App() {
-  // const [count, setCount] = useState(0);
-
   return (
     <>
       <PageWrapper></PageWrapper>
