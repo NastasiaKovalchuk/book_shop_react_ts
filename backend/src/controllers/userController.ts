@@ -48,6 +48,7 @@ class UserController {
         return res.json({
           mode: "register",
           token,
+          user: user.id,
         });
       }
 
