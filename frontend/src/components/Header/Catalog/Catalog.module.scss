@@ -1,11 +1,11 @@
 .categories_container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); // адаптивная сетка
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
   gap: 12px;
   padding: 20px;
   width: 70%;
   max-width: 1000px;
-  margin: 0 auto; // центрирование на больших экранах
+  margin: 0 auto;
 }
 
 .category-btn {
@@ -33,7 +33,7 @@
   }
 }
 
-// Адаптивность для маленьких экранов
+
 @media (max-width: 768px) {
   .categories_container {
     grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
