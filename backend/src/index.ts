@@ -13,7 +13,7 @@ app.use(express.json());
 // ===== DB CONNECT =====
 mongoose
   .connect(process.env.MONGO_URI as string)
-  .then(() => console.log("MongoDB connected"))
+  .then((): void => console.log("MongoDB connected"))
   .catch(console.error);
 
 // ===== ROUTES =====

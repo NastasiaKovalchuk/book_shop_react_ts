@@ -1,6 +1,7 @@
 import { useState } from "react";
 import style from "./Login.module.scss";
 import { useModal } from "../ModalContext";
+import { useAuthStore } from "../../store/auth.store.ts";
 
 export const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -9,6 +10,8 @@ export const LoginPage = () => {
   const [isUser, setIsUser] = useState(false);
   const [step, setStep] = useState<"email" | "password">("email");
 
+  const login = useAuthStore((s) => s.login);
+
   const [errors, setErrors] = useState<{ email?: string; password?: string }>(
     {},
   );
@@ -16,7 +19,6 @@ export const LoginPage = () => {
   if (!modal) return null;
 
   const checkEmail = async (email: string): Promise<void> => {
-    console.log("checkEmail");
     try {
       const res = await fetch(
         "https://book-shop-react-ts.onrender.com/auth/check-email",
@@ -31,7 +33,7 @@ export const LoginPage = () => {
         },
       );
       const data = await res.json();
-      console.log("checkEmail", data.exists);
+
       setIsUser(data.exists);
 
       setStep("password");
@@ -41,7 +43,6 @@ export const LoginPage = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    console.log("handleSubmit");
     e.preventDefault();
 
     const newErrors: typeof errors = {};
@@ -99,7 +100,6 @@ export const LoginPage = () => {
 
       if (!res.ok) {
         const error = await res.json();
-        console.log("error:", error.message);
         setErrors({
           password: error.message,
         });
@@ -107,7 +107,8 @@ export const LoginPage = () => {
       }
 
       const data = await res.json();
-      localStorage.setItem("token", data.token);
+      login({ id: data.user, email: email }, data.token);
+
       closeModal();
     } catch (err) {
       console.error("Auth error:", err);
