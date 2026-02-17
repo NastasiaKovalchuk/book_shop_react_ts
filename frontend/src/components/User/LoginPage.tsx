@@ -1,7 +1,7 @@
 import { useState } from "react";
 import style from "./Login.module.scss";
 import { useModal } from "../ModalContext";
-// import { useAuthStore } from "../../store/auth.store.ts";
+import { useAuthStore } from "../../store/auth.store.ts";
 
 export const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -9,6 +9,8 @@ export const LoginPage = () => {
   const { modal, closeModal } = useModal();
   const [isUser, setIsUser] = useState(false);
   const [step, setStep] = useState<"email" | "password">("email");
+
+  const login = useAuthStore((s) => s.login);
 
   const [errors, setErrors] = useState<{ email?: string; password?: string }>(
     {},
@@ -105,14 +107,7 @@ export const LoginPage = () => {
       }
 
       const data = await res.json();
-      console.log("DATA===>", data);
-      // console.log("Auth!!!!===>:", data);
-
-      // const login = useAuthStore((s) => s.login);
-      // const user = useAuthStore((s) => s.user);
-
-      // login({ id: "1", email: email }, "accessToken123");
-      // console.log(user);
+      login({ id: data.user, email: email }, data.token);
 
       closeModal();
     } catch (err) {
