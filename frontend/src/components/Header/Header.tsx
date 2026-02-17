@@ -1,9 +1,15 @@
 import style from "./Header.module.scss";
 import { FaShoppingCart, FaUser } from "react-icons/fa";
+import { MdAccountCircle } from "react-icons/md";
 import { NavBar } from "./NavBar";
 import { useModal } from "../ModalContext";
+import { useAuthStore } from "../../store/auth.store.ts";
 
 const Header = () => {
+  const token = useAuthStore((state) => state.accessToken);
+  const isAuth = !!token;
+
+  console.log("Header===>", isAuth);
   const { openLogin, openCatalog } = useModal();
   return (
     <header className={style.header}>
@@ -43,10 +49,17 @@ const Header = () => {
           <a href="/cart" className={style.action}>
             <FaShoppingCart /> Корзина
           </a>
-          <button onClick={openLogin}>
-            Login
-            <FaUser />
-          </button>
+          {!isAuth ? (
+            <button onClick={openLogin}>
+              Login
+              <FaUser />
+            </button>
+          ) : (
+            <button onClick={openLogin}>
+              Profile
+              <MdAccountCircle />
+            </button>
+          )}
         </div>
       </div>
 
