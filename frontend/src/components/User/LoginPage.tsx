@@ -31,6 +31,7 @@ export const LoginPage = () => {
         },
       );
       const data = await res.json();
+
       setIsUser(data.exists);
 
       setStep("password");
@@ -103,7 +104,8 @@ export const LoginPage = () => {
         return;
       }
 
-      // const data = await res.json();
+      const data = await res.json();
+      console.log("DATA===>", data);
       // console.log("Auth!!!!===>:", data);
 
       // const login = useAuthStore((s) => s.login);

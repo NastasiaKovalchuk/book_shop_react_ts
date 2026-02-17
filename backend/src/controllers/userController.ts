@@ -66,6 +66,7 @@ class UserController {
       return res.json({
         mode: "login",
         token,
+        user: user.id,
       });
     } catch {
       return res.status(500).json({ message: "Auth error" });
