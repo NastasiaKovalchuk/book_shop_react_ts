@@ -147,3 +147,24 @@
     }
   }
 }
+
+.profileWrapper {
+  .profileWrapper {
+    position: absolute;     // чтобы меню "выпадало" относительно кнопки
+    top: 100%;             // прямо под кнопкой
+    right: 0;              // прижато к правому краю кнопки
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); // мягкая тень
+    padding: 8px 0;
+    min-width: 180px;
+    z-index: 1000;
+    overflow: hidden;
+    animation: fadeIn 0.2s ease-in-out;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+}

@@ -1,14 +1,23 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { createBrowserRouter } from "react-router";
+import { createBrowserRouter, Navigate } from "react-router";
 import { RouterProvider } from "react-router/dom";
-
-import App from "./App.tsx";
+import { PageWrapper } from "./components/PageWrapper";
+import Home from "./components/Main/HomePage";
+import { ProfilePage } from "./components/User/ProfilePage";
+import { CartPage } from "./components/User/CartPage";
+import { OrdersPage } from "./components/User/OrdersPage";
 
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <App />,
+    element: <PageWrapper />,
+    children: [
+      { path: "/", element: <Home /> },
+      { path: "/profile", element: <ProfilePage /> },
+      { path: "/cart", element: <CartPage /> },
+      { path: "/orders", element: <OrdersPage /> },
+      { path: "*", element: <Navigate to="/" replace /> },
+    ],
   },
 ]);
 
