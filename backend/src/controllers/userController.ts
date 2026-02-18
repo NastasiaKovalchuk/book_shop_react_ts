@@ -23,6 +23,21 @@ class UserController {
 
   // Login или Register
   async authenticate(req: Request, res: Response) {
+    const generateAccessToken = (user: any) => {
+      return jwt.sign(
+        { id: user.id, email: user.email },
+        JWT_SECRET,
+        { expiresIn: "1h" }, // короткий
+      );
+    };
+
+    const generateRefreshToken = (user: any) => {
+      return jwt.sign(
+        { id: user.id },
+        JWT_SECRET,
+        { expiresIn: "30d" }, // длинный
+      );
+    };
     try {
       const { email, password } = req.body;
 
@@ -41,13 +56,13 @@ class UserController {
           passwordHash,
         });
 
-        const token = jwt.sign({ email }, JWT_SECRET, {
-          expiresIn: "30d",
-        });
+        const accessToken = generateAccessToken(user);
+        const refreshToken = generateRefreshToken(user);
 
         return res.json({
           mode: "register",
-          token,
+          accessToken,
+          refreshToken,
           user: user.id,
         });
       }
@@ -59,17 +74,49 @@ class UserController {
         return res.status(401).json({ message: "Wrong password" });
       }
 
-      const token = jwt.sign({ email }, JWT_SECRET, {
-        expiresIn: "30d",
-      });
+      const accessToken = generateAccessToken(user);
+      const refreshToken = generateRefreshToken(user);
 
       return res.json({
         mode: "login",
-        token,
+        accessToken,
+        refreshToken,
         user: user.id,
       });
     } catch {
       return res.status(500).json({ message: "Auth error" });
+    }
+  }
+
+  async refresh(req: Request, res: Response) {
+    try {
+      const { refreshToken } = req.body;
+
+      if (!refreshToken) {
+        return res.status(401).json({ message: "No refresh token" });
+      }
+
+      const decoded = jwt.verify(refreshToken, JWT_SECRET) as {
+        id: string;
+      };
+
+      const user = await User.findById(decoded.id);
+
+      if (!user) {
+        return res.status(401).json({ message: "User not found" });
+      }
+
+      const newAccessToken = jwt.sign(
+        { id: user.id, email: user.email },
+        JWT_SECRET,
+        { expiresIn: "15m" },
+      );
+
+      return res.json({
+        accessToken: newAccessToken,
+      });
+    } catch {
+      return res.status(401).json({ message: "Invalid refresh token" });
     }
   }
 }
