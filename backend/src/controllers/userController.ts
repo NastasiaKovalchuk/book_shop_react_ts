@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs";
 import { User } from "../db/models/User";
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
+const REFRESH_SECRET = process.env.JWT_SECRET as string;
 
 class UserController {
   // check email
@@ -34,7 +35,7 @@ class UserController {
     const generateRefreshToken = (user: any) => {
       return jwt.sign(
         { id: user.id },
-        JWT_SECRET,
+        REFRESH_SECRET,
         { expiresIn: "30d" }, // длинный
       );
     };

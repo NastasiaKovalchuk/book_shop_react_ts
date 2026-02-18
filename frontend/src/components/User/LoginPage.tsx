@@ -24,7 +24,6 @@ export const LoginPage = () => {
       const data = await api.checkEmail(email);
       setIsUser(data.exists);
       setStep("password");
-      console.log("checkEmail");
     } catch (err) {
       console.error("Error fetch:", err);
     }
@@ -72,14 +71,9 @@ export const LoginPage = () => {
     email: string,
     password: string,
   ): Promise<void> => {
-    console.log("getJwtToken");
-
     try {
       const res = await api.getJwtToken(email, password);
-
       const data = await res.json();
-
-      console.log("getJwtToken:", data);
 
       login(
         { id: data.user, email: email },
