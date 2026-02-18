@@ -74,12 +74,7 @@ export const LoginPage = () => {
     try {
       const res = await api.getJwtToken(email, password);
       const data = await res.json();
-
-      login(
-        { id: data.user, email: email },
-        data.accessToken,
-        data.refreshToken,
-      );
+      login({ id: data.user, email: email }, data.accessToken);
 
       closeModal();
     } catch (err) {

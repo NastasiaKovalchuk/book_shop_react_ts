@@ -5,9 +5,7 @@ import * as api from "../api/auth";
 interface AuthState {
   user: { id: string; email: string } | null;
   accessToken: string | null;
-  refreshToken: string | null;
-
-  login: (user: AuthState["user"], token: string, refreshToken: string) => void;
+  login: (user: AuthState["user"], token: string) => void;
   logout: () => void;
   refreshAccessToken: () => Promise<void>;
 }
@@ -17,15 +15,11 @@ export const useAuthStore = create(
     (set, get) => ({
       user: null,
       accessToken: null,
-      refreshToken: null,
-      login: (user, accessToken, refreshToken) =>
-        set({ user, accessToken, refreshToken }),
-      logout: () => set({ user: null, accessToken: null, refreshToken: null }),
+      login: (user, accessToken) => set({ user, accessToken }),
+      logout: () => set({ user: null, accessToken: null }),
       refreshAccessToken: async () => {
-        const token = get().refreshToken;
-        if (!token) return;
         try {
-          const data = await api.refreshToken(token);
+          const data = await api.refreshToken();
           set({ accessToken: data.accessToken });
         } catch {
           get().logout();

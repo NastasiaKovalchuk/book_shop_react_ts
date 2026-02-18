@@ -53,15 +53,15 @@ export const getJwtToken = async (email: string, password: string) => {
   return res;
 };
 
-export const refreshToken = async (refreshToken: string) => {
+export const refreshToken = async () => {
   const res = await fetch(
     "https://book-shop-react-ts.onrender.com/auth/refresh",
     {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ refreshToken }),
+      credentials: "include",
     },
   );
+
   if (!res.ok) throw new Error("Refresh failed");
   return res.json();
 };
