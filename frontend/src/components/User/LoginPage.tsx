@@ -2,6 +2,7 @@ import { useState } from "react";
 import style from "./Login.module.scss";
 import { useModal } from "../ModalContext";
 import { useAuthStore } from "../../store/auth.store.ts";
+import * as api from "../../api/auth.ts";
 
 export const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -20,23 +21,10 @@ export const LoginPage = () => {
 
   const checkEmail = async (email: string): Promise<void> => {
     try {
-      const res = await fetch(
-        "https://book-shop-react-ts.onrender.com/auth/check-email",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: email,
-          }),
-        },
-      );
-      const data = await res.json();
-
+      const data = await api.checkEmail(email);
       setIsUser(data.exists);
-
       setStep("password");
+      console.log("checkEmail");
     } catch (err) {
       console.error("Error fetch:", err);
     }
@@ -75,39 +63,29 @@ export const LoginPage = () => {
       setErrors(newErrors);
 
       if (Object.keys(newErrors).length === 0) {
-        await getJwtToken(email);
+        await getJwtToken(email, password);
       }
     }
   };
 
-  const getJwtToken = async (email: string): Promise<void> => {
+  const getJwtToken = async (
+    email: string,
+    password: string,
+  ): Promise<void> => {
     console.log("getJwtToken");
 
     try {
-      const res = await fetch(
-        "https://book-shop-react-ts.onrender.com/auth/authenticate",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email,
-            password,
-          }),
-        },
-      );
-
-      if (!res.ok) {
-        const error = await res.json();
-        setErrors({
-          password: error.message,
-        });
-        return;
-      }
+      const res = await api.getJwtToken(email, password);
 
       const data = await res.json();
-      login({ id: data.user, email: email }, data.token);
+
+      console.log("getJwtToken:", data);
+
+      login(
+        { id: data.user, email: email },
+        data.accessToken,
+        data.refreshToken,
+      );
 
       closeModal();
     } catch (err) {
