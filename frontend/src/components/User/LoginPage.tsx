@@ -72,20 +72,13 @@ export const LoginPage = () => {
     email: string,
     password: string,
   ): Promise<void> => {
-    console.log("getJwtToken");
-
     try {
       const res = await api.getJwtToken(email, password);
 
       const data = await res.json();
-
       console.log("getJwtToken:", data);
 
-      login(
-        { id: data.user, email: email },
-        data.accessToken,
-        data.refreshToken,
-      );
+      login({ id: data.user, email: email }, data.accessToken);
 
       closeModal();
     } catch (err) {

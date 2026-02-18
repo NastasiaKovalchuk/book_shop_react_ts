@@ -1,4 +1,5 @@
 import style from "./Header.module.scss";
+import { useEffect } from "react";
 import { FaShoppingCart, FaUser } from "react-icons/fa";
 import { MdAccountCircle } from "react-icons/md";
 import { NavBar } from "./NavBar";
@@ -6,10 +7,16 @@ import { useModal } from "../ModalContext";
 import { useAuthStore } from "../../store/auth.store.ts";
 
 const Header = () => {
-  const token = useAuthStore((state) => state.accessToken);
-  const isAuth = !!token;
+  const { accessToken, refreshAccessToken } = useAuthStore();
 
-  console.log("Header===>", isAuth);
+  useEffect(() => {
+    if (!accessToken) {
+      refreshAccessToken();
+    }
+  }, [accessToken, refreshAccessToken]);
+
+  const isAuth = !!accessToken;
+
   const { openLogin, openCatalog } = useModal();
   return (
     <header className={style.header}>

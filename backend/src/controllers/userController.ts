@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs";
 import { User } from "../db/models/User";
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
+const REFRESH_SECRET = process.env.JWT_SECRET as string;
 
 class UserController {
   // check email
@@ -24,19 +25,13 @@ class UserController {
   // Login или Register
   async authenticate(req: Request, res: Response) {
     const generateAccessToken = (user: any) => {
-      return jwt.sign(
-        { id: user.id, email: user.email },
-        JWT_SECRET,
-        { expiresIn: "1h" }, // короткий
-      );
+      return jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, {
+        expiresIn: "1h",
+      });
     };
 
     const generateRefreshToken = (user: any) => {
-      return jwt.sign(
-        { id: user.id },
-        JWT_SECRET,
-        { expiresIn: "30d" }, // длинный
-      );
+      return jwt.sign({ id: user.id }, REFRESH_SECRET, { expiresIn: "7d" });
     };
     try {
       const { email, password } = req.body;
@@ -59,10 +54,16 @@ class UserController {
         const accessToken = generateAccessToken(user);
         const refreshToken = generateRefreshToken(user);
 
+        res.cookie("refreshToken", refreshToken, {
+          httpOnly: true,
+          secure: true,
+          sameSite: "strict",
+          maxAge: 7 * 24 * 60 * 60 * 1000,
+        });
+
         return res.json({
           mode: "register",
           accessToken,
-          refreshToken,
           user: user.id,
         });
       }
@@ -77,10 +78,16 @@ class UserController {
       const accessToken = generateAccessToken(user);
       const refreshToken = generateRefreshToken(user);
 
+      res.cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "strict",
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      });
+
       return res.json({
         mode: "login",
         accessToken,
-        refreshToken,
         user: user.id,
       });
     } catch {
@@ -90,13 +97,12 @@ class UserController {
 
   async refresh(req: Request, res: Response) {
     try {
-      const { refreshToken } = req.body;
+      const refreshToken = req.cookies.refreshToken;
 
       if (!refreshToken) {
         return res.status(401).json({ message: "No refresh token" });
       }
-
-      const decoded = jwt.verify(refreshToken, JWT_SECRET) as {
+      const decoded = jwt.verify(refreshToken, REFRESH_SECRET) as {
         id: string;
       };
 
@@ -109,13 +115,20 @@ class UserController {
       const newAccessToken = jwt.sign(
         { id: user.id, email: user.email },
         JWT_SECRET,
-        { expiresIn: "15m" },
+        { expiresIn: "1h" },
       );
+
+      res.cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "strict",
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      });
 
       return res.json({
         accessToken: newAccessToken,
       });
-    } catch {
+    } catch (err) {
       return res.status(401).json({ message: "Invalid refresh token" });
     }
   }
