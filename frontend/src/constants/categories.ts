@@ -2,16 +2,20 @@ export const CATEGORIES = [
   "Classics",
   "Fiction",
   "Fantasy",
+  "Drama",
   "Science-fiction",
+  "Philosophical",
   "Romance",
   "Horror",
   "Children",
-  "History",
+  "Historical",
   "Science",
   "Adventure",
   "Mystery",
+  "Detective",
+  "Epic",
   "Poetry",
-  "Movie Books",
+  "Tragedy",
 ] as const;
 
 export type Category = (typeof CATEGORIES)[number];

@@ -54,6 +54,7 @@ export const getJwtToken = async (email: string, password: string) => {
 };
 
 export const refreshToken = async () => {
+  console.log("refreshAccessToken");
   const res = await fetch(
     "https://book-shop-react-ts.onrender.com/auth/refresh",
     {

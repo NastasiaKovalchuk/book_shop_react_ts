@@ -1,0 +1,388 @@
+export const BOOKS = [
+  {
+    id: 1,
+    title: "Pride and Prejudice",
+    author: [{ name: "Jane Austen" }],
+    languages: ["en"],
+    summaries: [
+      "Classic novel about love and social status in 19th century England.",
+    ],
+    categories: ["Romance", "Classic", "Fiction"],
+    formats: {
+      "image/jpeg": "https://covers.openlibrary.org/b/id/14348537-L.jpg",
+    },
+    price: 18,
+  },
+  {
+    id: 2,
+    title: "Moby-Dick",
+    author: [{ name: "Herman Melville" }],
+    languages: ["en"],
+    summaries: [
+      "The story of Captain Ahab’s obsessive quest for the white whale.",
+    ],
+    categories: ["Adventure", "Classic", "Fiction"],
+    formats: {
+      "image/jpeg": "https://covers.openlibrary.org/b/id/10544254-L.jpg",
+    },
+    price: 20,
+  },
+  {
+    id: 3,
+    title: "The Adventures of Sherlock Holmes",
+    author: [{ name: "Arthur Conan Doyle" }],
+    languages: ["en"],
+    summaries: ["A collection of detective stories featuring Sherlock Holmes."],
+    categories: ["Mystery", "Detective", "Classic"],
+    formats: {
+      "image/jpeg": "https://covers.openlibrary.org/b/id/6717853-L.jpg",
+    },
+    price: 15,
+  },
+  {
+    id: 4,
+    title: "Great Expectations",
+    author: [{ name: "Charles Dickens" }],
+    languages: ["en"],
+    summaries: [
+      "The story of Pip, an orphan who dreams of becoming a gentleman.",
+    ],
+    categories: ["Classic", "Fiction", "Drama"],
+    formats: {
+      "image/jpeg": "https://covers.openlibrary.org/b/id/13322313-L.jpg",
+    },
+    price: 17,
+  },
+  {
+    id: 5,
+    title: "War and Peace",
+    author: [{ name: "Leo Tolstoy" }],
+    languages: ["en"],
+    summaries: ["Epic novel about Russian society during the Napoleonic Wars."],
+    categories: ["Historical", "Classic", "Drama"],
+    formats: {
+      "image/jpeg": "https://covers.openlibrary.org/b/id/12621906-L.jpg",
+    },
+    price: 22,
+  },
+  {
+    id: 6,
+    title: "Anna Karenina",
+    author: [{ name: "Leo Tolstoy" }],
+    languages: ["en"],
+    summaries: [
+      "A tragic story of love and infidelity in Russian high society.",
+    ],
+    categories: ["Romance", "Classic", "Drama"],
+    formats: {
+      "image/jpeg": "https://covers.openlibrary.org/b/id/2560652-L.jpg",
+    },
+    price: 19,
+  },
+  {
+    id: 7,
+    title: "Dracula",
+    author: [{ name: "Bram Stoker" }],
+    languages: ["en"],
+    summaries: ["The classic horror story of Count Dracula."],
+    categories: ["Horror", "Classic", "Fiction"],
+    formats: {
+      "image/jpeg": "https://covers.openlibrary.org/b/id/12216503-L.jpg",
+    },
+    price: 16,
+  },
+  {
+    id: 8,
+    title: "Frankenstein",
+    author: [{ name: "Mary Shelley" }],
+    languages: ["en"],
+    summaries: ["A scientist creates a living being from dead body parts."],
+    categories: ["Horror", "Science Fiction", "Classic"],
+    formats: {
+      "image/jpeg": "https://covers.openlibrary.org/b/id/12356249-L.jpg",
+    },
+    price: 16,
+  },
+  {
+    id: 9,
+    title: "The Picture of Dorian Gray",
+    author: [{ name: "Oscar Wilde" }],
+    languages: ["en"],
+    summaries: [
+      "A young man remains eternally youthful while his portrait ages.",
+    ],
+    categories: ["Drama", "Classic", "Philosophical"],
+    formats: {
+      "image/jpeg": "https://covers.openlibrary.org/b/id/14314858-L.jpg",
+    },
+    price: 17,
+  },
+  {
+    id: 10,
+    title: "Alice's Adventures in Wonderland",
+    author: [{ name: "Lewis Carroll" }],
+    languages: ["en"],
+    summaries: [
+      "Alice falls into a fantastical world full of strange creatures.",
+    ],
+    categories: ["Fantasy", "Adventure", "Classic"],
+    formats: {
+      "image/jpeg": "https://covers.openlibrary.org/b/id/10527843-L.jpg",
+    },
+    price: 15,
+  },
+  {
+    id: 11,
+    title: "Through the Looking-Glass",
+    author: [{ name: "Lewis Carroll" }],
+    languages: ["en"],
+    summaries: ["Sequel to Alice's Adventures in Wonderland."],
+    categories: ["Fantasy", "Adventure", "Classic"],
+    formats: {
+      "image/jpeg": "https://covers.openlibrary.org/b/id/8228693-L.jpg",
+    },
+    price: 15,
+  },
+  {
+    id: 12,
+    title: "The Count of Monte Cristo",
+    author: [{ name: "Alexandre Dumas" }],
+    languages: ["en"],
+    summaries: ["A story of betrayal, imprisonment, and revenge."],
+    categories: ["Adventure", "Classic", "Drama"],
+    formats: {
+      "image/jpeg": "https://covers.openlibrary.org/b/id/8091011-L.jpg",
+    },
+    price: 20,
+  },
+  {
+    id: 13,
+    title: "Les Misérables",
+    author: [{ name: "Victor Hugo" }],
+    languages: ["en"],
+    summaries: [
+      "A tale of justice, love, and redemption in 19th century France.",
+    ],
+    categories: ["Historical", "Classic", "Drama"],
+    formats: {
+      "image/jpeg": "https://covers.openlibrary.org/b/id/8221425-L.jpg",
+    },
+    price: 22,
+  },
+  {
+    id: 14,
+    title: "Jane Eyre",
+    author: [{ name: "Charlotte Brontë" }],
+    languages: ["en"],
+    summaries: ["A young governess struggles to find independence and love."],
+    categories: ["Romance", "Classic", "Drama"],
+    formats: {
+      "image/jpeg": "https://covers.openlibrary.org/b/id/8224321-L.jpg",
+    },
+    price: 18,
+  },
+  {
+    id: 15,
+    title: "Wuthering Heights",
+    author: [{ name: "Emily Brontë" }],
+    languages: ["en"],
+    summaries: ["A dark tale of passion and revenge on the Yorkshire moors."],
+    categories: ["Romance", "Classic", "Drama"],
+    formats: {
+      "image/jpeg": "https://covers.openlibrary.org/b/id/8224333-L.jpg",
+    },
+    price: 18,
+  },
+  {
+    id: 16,
+    title: "The Odyssey",
+    author: [{ name: "Homer" }],
+    languages: ["en"],
+    summaries: [
+      "The epic journey of Odysseus returning home from the Trojan War.",
+    ],
+    categories: ["Epic", "Adventure", "Classic"],
+    formats: {
+      "image/jpeg": "https://covers.openlibrary.org/b/id/8231996-L.jpg",
+    },
+    price: 20,
+  },
+  {
+    id: 17,
+    title: "The Iliad",
+    author: [{ name: "Homer" }],
+    languages: ["en"],
+    summaries: ["Epic poem describing the Trojan War and its heroes."],
+    categories: ["Epic", "Adventure", "Classic"],
+    formats: {
+      "image/jpeg": "https://covers.openlibrary.org/b/id/8232002-L.jpg",
+    },
+    price: 20,
+  },
+  {
+    id: 18,
+    title: "Crime and Punishment",
+    author: [{ name: "Fyodor Dostoevsky" }],
+    languages: ["en"],
+    summaries: ["The psychological journey of a man who commits murder."],
+    categories: ["Drama", "Psychological", "Classic"],
+    formats: {
+      "image/jpeg": "https://covers.openlibrary.org/b/id/7984911-L.jpg",
+    },
+    price: 21,
+  },
+  {
+    id: 19,
+    title: "The Brothers Karamazov",
+    author: [{ name: "Fyodor Dostoevsky" }],
+    languages: ["en"],
+    summaries: ["A philosophical novel exploring faith, doubt, and morality."],
+    categories: ["Drama", "Philosophical", "Classic"],
+    formats: {
+      "image/jpeg": "https://covers.openlibrary.org/b/id/7984912-L.jpg",
+    },
+    price: 21,
+  },
+  {
+    id: 20,
+    title: "Dr. Jekyll and Mr. Hyde",
+    author: [{ name: "Robert Louis Stevenson" }],
+    languages: ["en"],
+    summaries: ["A story of dual personality and moral conflict."],
+    categories: ["Horror", "Classic", "Fiction"],
+    formats: {
+      "image/jpeg": "https://covers.openlibrary.org/b/id/8231992-L.jpg",
+    },
+    price: 16,
+  },
+  {
+    id: 21,
+    title: "Gulliver's Travels",
+    author: [{ name: "Jonathan Swift" }],
+    languages: ["en"],
+    summaries: [
+      "Satirical tale of Lemuel Gulliver’s travels to fantastical lands.",
+    ],
+    categories: ["Adventure", "Classic", "Satire"],
+    formats: {
+      "image/jpeg": "https://covers.openlibrary.org/b/id/8231993-L.jpg",
+    },
+    price: 17,
+  },
+  {
+    id: 22,
+    title: "The Divine Comedy",
+    author: [{ name: "Dante Alighieri" }],
+    languages: ["en"],
+    summaries: [
+      "Epic poem describing the journey through Hell, Purgatory, and Paradise.",
+    ],
+    categories: ["Epic", "Classic", "Poetry"],
+    formats: {
+      "image/jpeg": "https://covers.openlibrary.org/b/id/8231994-L.jpg",
+    },
+    price: 22,
+  },
+  {
+    id: 23,
+    title: "A Tale of Two Cities",
+    author: [{ name: "Charles Dickens" }],
+    languages: ["en"],
+    summaries: [
+      "Story set during the French Revolution, exploring love and sacrifice.",
+    ],
+    categories: ["Historical", "Classic", "Drama"],
+    formats: {
+      "image/jpeg": "https://covers.openlibrary.org/b/id/8314144-L.jpg",
+    },
+    price: 18,
+  },
+  {
+    id: 24,
+    title: "Macbeth",
+    author: [{ name: "William Shakespeare" }],
+    languages: ["en"],
+    summaries: ["Tragic play about ambition, power, and fate."],
+    categories: ["Drama", "Classic", "Tragedy"],
+    formats: {
+      "image/jpeg": "https://covers.openlibrary.org/b/id/8231995-L.jpg",
+    },
+    price: 16,
+  },
+  {
+    id: 25,
+    title: "Hamlet",
+    author: [{ name: "William Shakespeare" }],
+    languages: ["en"],
+    summaries: ["The Prince of Denmark seeks revenge for his father's murder."],
+    categories: ["Drama", "Classic", "Tragedy"],
+    formats: {
+      "image/jpeg": "https://covers.openlibrary.org/b/id/8231997-L.jpg",
+    },
+    price: 16,
+  },
+  {
+    id: 26,
+    title: "Romeo and Juliet",
+    author: [{ name: "William Shakespeare" }],
+    languages: ["en"],
+    summaries: ["A tragic love story between two young star-crossed lovers."],
+    categories: ["Romance", "Classic", "Tragedy"],
+    formats: {
+      "image/jpeg": "https://covers.openlibrary.org/b/id/8231998-L.jpg",
+    },
+    price: 16,
+  },
+  {
+    id: 27,
+    title: "The Hobbit",
+    author: [{ name: "J.R.R. Tolkien" }],
+    languages: ["en"],
+    summaries: [
+      "Bilbo Baggins goes on an unexpected adventure in Middle-earth.",
+    ],
+    categories: ["Fantasy", "Adventure", "Classic"],
+    formats: {
+      "image/jpeg": "https://covers.openlibrary.org/b/id/8231999-L.jpg",
+    },
+    price: 19,
+  },
+  {
+    id: 28,
+    title: "The Lord of the Rings: The Fellowship of the Ring",
+    author: [{ name: "J.R.R. Tolkien" }],
+    languages: ["en"],
+    summaries: ["The first part of the epic journey to destroy the One Ring."],
+    categories: ["Fantasy", "Adventure", "Classic"],
+    formats: {
+      "image/jpeg": "https://covers.openlibrary.org/b/id/8232000-L.jpg",
+    },
+    price: 25,
+  },
+  {
+    id: 29,
+    title: "The Lord of the Rings: The Two Towers",
+    author: [{ name: "J.R.R. Tolkien" }],
+    languages: ["en"],
+    summaries: ["The second part of the epic journey in Middle-earth."],
+    categories: ["Fantasy", "Adventure", "Classic"],
+    formats: {
+      "image/jpeg": "https://covers.openlibrary.org/b/id/8232001-L.jpg",
+    },
+    price: 25,
+  },
+  {
+    id: 30,
+    title: "The Lord of the Rings: The Return of the King",
+    author: [{ name: "J.R.R. Tolkien" }],
+    languages: ["en"],
+    summaries: ["The final part of the journey to destroy the One Ring."],
+    categories: ["Fantasy", "Adventure", "Classic"],
+    formats: {
+      "image/jpeg": "https://covers.openlibrary.org/b/id/8232002-L.jpg",
+    },
+    price: 25,
+  },
+];
+
+export type Books = (typeof BOOKS)[number];

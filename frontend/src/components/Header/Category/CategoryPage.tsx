@@ -1,22 +1,9 @@
 import { useState, useEffect } from "react";
-import { BookCard } from "./BookCard";
-import style from "./Home.module.scss";
+import { BookCard } from "../../Main/BookCard";
+import style from "../../Main/Home.module.scss";
 
-// interface for Gutendex
-// export interface Book {
-//   id: number;
-//   title: string;
-//   authors: {
-//     name: string;
-//   }[];
-//   languages: string[];
-//   summaries: string[];
-//   formats: {
-//     "image/jpeg"?: string;
-//   };
-// }
+import { useParams } from "react-router";
 
-// interface for Open Library
 export interface Book {
   key: string;
   title: string;
@@ -26,16 +13,21 @@ export interface Book {
   language?: string[];
 }
 
-const Main = () => {
+export const CategoryPage = () => {
+  const { category } = useParams<{ category: string }>();
   const [books, setBooks] = useState<Book[]>([]);
 
   useEffect(() => {
+    if (!category) return;
+
+    const formattedCategory = category?.toLowerCase().replace(/\s+/g, "_");
+
     const fetchBooks = async (): Promise<void> => {
       try {
-        const url = "https://openlibrary.org/search.json?q=book&limit=30";
+        const url = `https://openlibrary.org/search.json?subject=${encodeURIComponent(formattedCategory ?? "")}&limit=30`;
         const res = await fetch(url);
         const data = await res.json();
-        console.log("fetchBooks", data.docs);
+
         setBooks(data.docs || []);
       } catch (err) {
         console.error("Ошибка fetch:", err);
@@ -43,9 +35,10 @@ const Main = () => {
     };
 
     fetchBooks();
-  }, []);
+  }, [category]);
 
   return (
+    // <div>{category}</div>
     <div className={style.books_grid}>
       {books.map((book) => {
         return (
@@ -61,4 +54,4 @@ const Main = () => {
   );
 };
 
-export default Main;
+export default CategoryPage;

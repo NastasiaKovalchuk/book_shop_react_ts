@@ -1,6 +1,6 @@
 import { createPortal } from "react-dom";
 import { useModal } from "./ModalContext";
-import { Catalog } from "./Header/Catalog/Catalog";
+import { Catalog } from "./Header/Category/AllCategories";
 import { LoginPage } from "./User/LoginPage";
 import style from "./Modal.module.scss";
 
