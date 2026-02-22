@@ -1,7 +1,9 @@
 import style from "./Header.module.scss";
 import { useState, useEffect } from "react";
-import { FaShoppingCart, FaUser } from "react-icons/fa";
+import { FaUser } from "react-icons/fa";
+import { BsCart } from "react-icons/bs";
 import { MdAccountCircle } from "react-icons/md";
+import { SiBookstack } from "react-icons/si";
 import { NavBar } from "./NavBar";
 import { useModal } from "../ModalContext";
 import { useAuthStore } from "../../store/auth.store.ts";
@@ -35,14 +37,15 @@ const Header = () => {
         </div>
         <div>
           <li>
-            <button onClick={openCatalog}>Catalog</button>
+            <button onClick={openCatalog} className={style.actions}>
+              <SiBookstack /> Catalog
+            </button>
           </li>
         </div>
         <div>
           <form action="/search/" method="get">
-            <div className={style.header}>
+            <div className={style.search__input}>
               <input
-                className={style.header}
                 placeholder="Search"
                 name="q"
                 data-testid="search__input"
@@ -53,7 +56,7 @@ const Header = () => {
                 aria-expanded="false"
               />
               <button
-                className={style.header}
+                // className={style.header}
                 type="submit"
                 data-testid="search__button"
                 aria-label="Search "
@@ -65,7 +68,7 @@ const Header = () => {
         </div>
         <div className={style.actions}>
           <div className={style.action} onClick={() => navigate("/cart")}>
-            <FaShoppingCart />
+            <BsCart />
           </div>
 
           <button

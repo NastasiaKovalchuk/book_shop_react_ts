@@ -66,10 +66,15 @@
       }
     }
 
+    .search__input {
+      width: 500px;
+    }
+
     .actions {
       display: flex;
       align-items: center;
       gap: 15px;
+      cursor: pointer;
 
       .action {
         display: flex;
