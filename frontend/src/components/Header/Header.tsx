@@ -8,11 +8,11 @@ import { useAuthStore } from "../../store/auth.store.ts";
 import { ProfileMenu } from "../User/ProfileMenu";
 import { useNavigate } from "react-router";
 
-ProfileMenu;
 const Header = () => {
-  const { accessToken, refreshAccessToken } = useAuthStore();
+  const { accessToken, refreshAccessToken, isAuthChecked } = useAuthStore();
   const [showMenu, setShowMenu] = useState(false);
   const navigate = useNavigate();
+  const { openLogin, openCatalog } = useModal();
 
   useEffect(() => {
     if (!accessToken) {
@@ -25,8 +25,8 @@ const Header = () => {
   };
 
   const isAuth = !!accessToken;
+  // if (!isAuthChecked) return null;
 
-  const { openLogin, openCatalog } = useModal();
   return (
     <header className={style.header}>
       <div className={style.header_wrapper}>
@@ -64,12 +64,14 @@ const Header = () => {
           </form>
         </div>
         <div className={style.actions}>
-          <a href="/cart" className={style.action}>
-            <FaShoppingCart /> Корзина
-          </a>
+          <div className={style.action} onClick={() => navigate("/cart")}>
+            <FaShoppingCart />
+          </div>
 
-          <button onClick={isAuth ? handleProfileClick : openLogin}>
-            {isAuth ? (
+          <button
+            onClick={isAuthChecked && isAuth ? handleProfileClick : openLogin}
+          >
+            {isAuthChecked && isAuth ? (
               <>
                 Profile <MdAccountCircle />
               </>
@@ -79,7 +81,7 @@ const Header = () => {
               </>
             )}
           </button>
-          {isAuth && showMenu && (
+          {isAuthChecked && isAuth && showMenu && (
             <ProfileMenu onClose={() => setShowMenu(false)} />
           )}
         </div>

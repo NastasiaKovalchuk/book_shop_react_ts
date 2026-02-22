@@ -5,6 +5,7 @@ import * as api from "../api/auth";
 interface AuthState {
   user: { id: string; email: string } | null;
   accessToken: string | null;
+  isAuthChecked: boolean;
   login: (user: AuthState["user"], token: string) => void;
   logout: () => void;
   refreshAccessToken: () => Promise<void>;
@@ -15,7 +16,9 @@ export const useAuthStore = create(
     (set, get) => ({
       user: null,
       accessToken: null,
-      login: (user, accessToken) => set({ user, accessToken }),
+      isAuthChecked: false,
+      login: (user, accessToken) =>
+        set({ user, accessToken, isAuthChecked: true }),
       logout: () => set({ user: null, accessToken: null }),
       refreshAccessToken: async () => {
         try {

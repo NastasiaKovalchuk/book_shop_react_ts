@@ -7,6 +7,7 @@ import Home from "./components/Main/HomePage";
 import { ProfilePage } from "./components/User/ProfilePage";
 import { CartPage } from "./components/User/CartPage";
 import { OrdersPage } from "./components/User/OrdersPage";
+import { CategoryPage } from "./components/Header/Category/CategoryPage";
 
 const router = createBrowserRouter([
   {
@@ -16,6 +17,7 @@ const router = createBrowserRouter([
       { path: "/profile", element: <ProfilePage /> },
       { path: "/cart", element: <CartPage /> },
       { path: "/orders", element: <OrdersPage /> },
+      { path: "/category/:category", element: <CategoryPage /> },
       { path: "*", element: <Navigate to="/" replace /> },
     ],
   },
