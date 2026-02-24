@@ -8,6 +8,7 @@ import { ProfilePage } from "./components/User/ProfilePage";
 import { CartPage } from "./components/User/CartPage";
 import { OrdersPage } from "./components/User/OrdersPage";
 import { CategoryPage } from "./components/Header/Category/CategoryPage";
+import { BookPage } from "./components/Books/BookPage";
 
 const router = createBrowserRouter([
   {
@@ -18,6 +19,7 @@ const router = createBrowserRouter([
       { path: "/cart", element: <CartPage /> },
       { path: "/orders", element: <OrdersPage /> },
       { path: "/category/:category", element: <CategoryPage /> },
+      { path: "/book/:id", element: <BookPage /> },
       { path: "*", element: <Navigate to="/" replace /> },
     ],
   },

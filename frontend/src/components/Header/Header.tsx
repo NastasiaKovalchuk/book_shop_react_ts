@@ -13,8 +13,11 @@ import { useNavigate } from "react-router";
 const Header = () => {
   const { accessToken, refreshAccessToken, isAuthChecked } = useAuthStore();
   const [showMenu, setShowMenu] = useState(false);
-  const navigate = useNavigate();
   const { openLogin, openCatalog } = useModal();
+  const [query, setQuery] = useState("");
+  const [results, setResults] = useState<Book[]>([]);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!accessToken) {
@@ -24,6 +27,44 @@ const Header = () => {
 
   const handleProfileClick = () => {
     setShowMenu(!showMenu);
+  };
+
+  useEffect(() => {
+    if (query.length < 3) {
+      setResults([]);
+      setShowDropdown(false);
+      return;
+    }
+
+    const timeout = setTimeout(async () => {
+      try {
+        const res = await fetch(
+          `https://openlibrary.org/search.json?q=${encodeURIComponent(query)}&page=1`,
+        );
+        const data = await res.json();
+        console.log("searchByParameters", data.docs);
+        setResults((data.docs ?? []).slice(0, 5));
+        setShowDropdown(true);
+      } catch (err) {
+        console.error(err);
+      }
+    }, 400);
+
+    return () => clearTimeout(timeout);
+  }, [query]);
+
+  const handleChooseBook = (title: string, key: string) => {
+    const workId = key.split("/").pop();
+    const createSlug = (title: string) =>
+      title
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9\s-]/g, "")
+        .replace(/\s+/g, "-");
+    console.log(`/book/${createSlug(title)}-${workId}`);
+    navigate(`/book/${createSlug(title)}-${workId}`);
+    setShowDropdown(false);
+    setQuery("");
   };
 
   const isAuth = !!accessToken;
@@ -43,9 +84,18 @@ const Header = () => {
           </li>
         </div>
         <div>
-          <form action="/search/" method="get">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (!query.trim()) return;
+
+              navigate(`/search?q=${encodeURIComponent(query)}`);
+              setShowDropdown(false);
+            }}
+          >
             <div className={style.search__input}>
               <input
+                value={query}
                 placeholder="Search"
                 name="q"
                 data-testid="search__input"
@@ -54,7 +104,22 @@ const Header = () => {
                 aria-autocomplete="list"
                 aria-haspopup="listbox"
                 aria-expanded="false"
+                onChange={(e) => setQuery(e.target.value)}
               />
+              {showDropdown && results.length > 0 && (
+                <div className={style.dropdown}>
+                  {results.map((book) => (
+                    <div
+                      className={style.dropdown_item}
+                      key={book.key}
+                      onClick={() => handleChooseBook(book.title, book.key)}
+                    >
+                      <div>{book.title},</div>
+                      <small>{book.author_name?.[0] ?? "Unknown author"}</small>
+                    </div>
+                  ))}
+                </div>
+              )}
               <button
                 // className={style.header}
                 type="submit"
