@@ -1,15 +1,7 @@
-import style from "./Home.module.scss";
+import style from "./BookCard.module.scss";
+import { useNavigate } from "react-router";
+import { generatePrice } from "../../utils/price.ts";
 
-// type Book = {
-//   id: number;
-//   title: string;
-//   authors: { name: string }[];
-//   languages: string[];
-//   summaries: string[];
-//   formats: {
-//     "image/jpeg"?: string;
-//   };
-// };
 type Book = {
   key: string;
   title: string;
@@ -24,22 +16,29 @@ type BookCardProps = {
 };
 
 export const BookCard = ({ book }: BookCardProps) => {
+  const navigate = useNavigate();
   const image = book.cover_i
     ? `https://covers.openlibrary.org/b/id/${book.cover_i}-L.jpg`
     : null;
 
-  const addPrice = (key: string) => {
-    const min = 5;
-    const max = 30;
-
-    // берём числовую часть из key, например "/works/OL99529W"
-    const numericPart = key.replace(/\D/g, "");
-    const baseNumber = Number(numericPart) || 1;
-
-    return (baseNumber % (max - min)) + min;
+  const handleChooseBook = (title: string, key: string) => {
+    const workId = key.split("/").pop();
+    const createSlug = (title: string) =>
+      title
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9\s-]/g, "")
+        .replace(/\s+/g, "-");
+    console.log(title, key);
+    navigate(`/book/${createSlug(title)}-${workId}`);
+    return;
   };
+
   return (
-    <div className={style.card}>
+    <div
+      className={style.card}
+      onClick={() => handleChooseBook(book.title, book.key)}
+    >
       <div className={style.image_wrapper}>
         {image ? (
           <img src={image} alt={book.title} className={style.image} />
@@ -57,7 +56,7 @@ export const BookCard = ({ book }: BookCardProps) => {
 
         <div className={style.meta}>
           <div className={style.footer}>{book.language?.join(", ")}</div>
-          <div className={style.price}>${addPrice(book.key)}</div>
+          <div className={style.price}>${generatePrice(book.key)}</div>
         </div>
       </div>
     </div>

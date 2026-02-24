@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { BookCard } from "../../Main/BookCard";
+import { BookCard } from "../../Books/BookCard";
 import style from "../../Main/Home.module.scss";
 
 import { useParams } from "react-router";

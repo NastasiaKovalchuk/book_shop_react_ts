@@ -1,21 +1,8 @@
 import { useState, useEffect } from "react";
-import { BookCard } from "./BookCard";
+import BookLoader from "../Books/BooksLoader.tsx";
+import { BookCard } from "../Books/BookCard";
 import style from "./Home.module.scss";
-
-// interface for Gutendex
-// export interface Book {
-//   id: number;
-//   title: string;
-//   authors: {
-//     name: string;
-//   }[];
-//   languages: string[];
-//   summaries: string[];
-//   formats: {
-//     "image/jpeg"?: string;
-//   };
-// }
-
+import { BOOKS } from "../../constants/books.ts";
 // interface for Open Library
 export interface Book {
   key: string;
@@ -28,22 +15,30 @@ export interface Book {
 
 const Main = () => {
   const [books, setBooks] = useState<Book[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log("fetchBooks");
     const fetchBooks = async (): Promise<void> => {
       try {
-        const url = "https://openlibrary.org/search.json?q=book&limit=30";
+        const url = "https://openlibrary.org/search.json?title=book";
         const res = await fetch(url);
         const data = await res.json();
-        console.log("fetchBooks", data.docs);
-        setBooks(data.docs || []);
+        // console.log("fetchBooks", data.docs);
+        setBooks(data.docs.slice(0, 30) || []);
+        setLoading(false);
       } catch (err) {
+        setBooks(BOOKS);
         console.error("Ошибка fetch:", err);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchBooks();
   }, []);
+
+  if (loading) return <BookLoader />;
 
   return (
     <div className={style.books_grid}>

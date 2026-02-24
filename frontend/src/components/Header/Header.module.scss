@@ -32,10 +32,10 @@
       flex: 1;
       margin: 0 20px;
 
-      div {
-        display: flex;
-        align-items: center;
-      }
+      // div {
+      //   display: flex;
+      //   align-items: center;
+      // }
 
       input {
         flex: 1;
@@ -112,7 +112,7 @@
   }
 }
 
-// NavBar стили
+
 .header_wrapper a {
   margin: 0 10px;
   color: #555;
@@ -126,7 +126,7 @@
   }
 }
 
-// Адаптивность
+
 @media (max-width: 768px) {
   .header_wrapper {
     flex-direction: column;
@@ -155,12 +155,12 @@
 
 .profileWrapper {
   .profileWrapper {
-    position: absolute;     // чтобы меню "выпадало" относительно кнопки
-    top: 100%;             // прямо под кнопкой
-    right: 0;              // прижато к правому краю кнопки
+    position: absolute;
+    top: 100%;
+    right: 0;
     background-color: #fff;
     border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); // мягкая тень
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
     padding: 8px 0;
     min-width: 180px;
     z-index: 1000;
@@ -171,5 +171,43 @@
   @keyframes fadeIn {
     from { opacity: 0; transform: translateY(-10px); }
     to { opacity: 1; transform: translateY(0); }
+  }
+}
+
+.search__input {
+  position: relative;
+}
+
+.dropdown {
+  position: absolute;
+  display: flex;
+  // align-items: flex-start;
+  align-items: stretch; 
+  flex-direction: column;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  z-index: 100;
+  margin-top: 4px;
+  max-height: 300px;
+}
+
+.dropdown_item {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  padding: 10px;
+  cursor: pointer;
+
+  &:hover {
+    background: #f3f4f6;
+  }
+
+  small {
+    margin-left: 10px;
+    color: #6b7280;
   }
 }
