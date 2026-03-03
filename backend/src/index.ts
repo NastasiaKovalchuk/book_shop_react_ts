@@ -3,6 +3,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import userRouter from "./routes/userRouter";
+import cartRouter from "./routes/cartRouter";
+import orderRouter from "./routes/orderRouter";
 
 dotenv.config();
 
@@ -18,6 +20,8 @@ mongoose
 
 // ===== ROUTES =====
 app.use("/auth", userRouter);
+app.use("/cart", cartRouter);
+app.use("/orders", orderRouter);
 
 // =====================================================
 app.listen(process.env.PORT || 4000, () => {

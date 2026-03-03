@@ -1,15 +1,16 @@
 import style from "./BookCard.module.scss";
 import { useNavigate } from "react-router";
 import { generatePrice } from "../../utils/price.ts";
+import { type Book } from "../../types/book";
 
-type Book = {
-  key: string;
-  title: string;
-  author_name?: string[];
-  cover_i?: number;
-  first_publish_year?: number;
-  language?: string[];
-};
+// type Book = {
+//   key: string;
+//   title: string;
+//   author_name?: string[];
+//   cover_i?: number;
+//   first_publish_year?: number;
+//   language?: string[];
+// };
 
 type BookCardProps = {
   book: Book;

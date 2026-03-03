@@ -3,21 +3,26 @@ import { useParams } from "react-router";
 import { useState, useEffect } from "react";
 import BookCardLoader from "./BookCardLoader";
 import { generatePrice } from "../../utils/price.ts";
+import { type BookDetails } from "../../types/book";
+import { useCartStore } from "../../store/cart.store.ts";
+import * as api from "../../api/cart.ts";
+import { getValidToken } from "../../utils/checkingToken.ts";
 
-type Book = {
-  key: string;
-  title: string;
-  description?: string;
-  cover?: string;
-  authors: string[];
-  languages: string[];
-};
+// type BookDetails = {
+//   key: string;
+//   title: string;
+//   description?: string;
+//   cover?: string;
+//   authors: string[];
+//   languages: string[];
+// };
 
 export const BookPage = () => {
   const { id } = useParams<{ id: string }>();
-  const [book, setBook] = useState<Book | null>(null);
+  const [book, setBook] = useState<BookDetails | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const addItem = useCartStore((state) => state.addItem);
 
   useEffect(() => {
     if (!id) return;
@@ -35,12 +40,9 @@ export const BookPage = () => {
           { signal: controller.signal },
         );
 
-        // console.log("workRes", workRes);
-
         if (!workRes.ok) throw new Error("Work not found");
 
         const workData = await workRes.json();
-        // console.log("languages", workData.description);
 
         const authorPromises =
           workData.authors?.map((a: any) =>
@@ -95,9 +97,30 @@ export const BookPage = () => {
     return () => controller.abort();
   }, [id]);
 
-  const handleAddToCart = (book: Book) => {
+  const handleAddToCart = async (book: BookDetails) => {
     const price = generatePrice(book.key);
-    console.log(`Added to cart: ${book.title} — $${price}`);
+    const token = await getValidToken();
+
+    if (!token) {
+      console.log("No valid token, please login");
+      return;
+    }
+
+    const newItem = {
+      bookId: book.key,
+      title: book.title,
+      cover: book.cover,
+      price: price,
+      quantity: 1,
+    };
+
+    try {
+      await api.addItem(newItem, token);
+
+      addItem(newItem);
+    } catch (err) {
+      console.error("Add to cart error:", err);
+    }
   };
 
   if (loading) return <BookCardLoader />;
