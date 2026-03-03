@@ -4,10 +4,9 @@ import bcrypt from "bcryptjs";
 import { User } from "../db/models/User";
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
-const REFRESH_SECRET = process.env.JWT_SECRET as string;
+const REFRESH_SECRET = process.env.REFRESH_SECRET as string;
 
 class UserController {
-  // check email
   async checkEmail(req: Request, res: Response) {
     try {
       const { email } = req.body;
@@ -26,13 +25,14 @@ class UserController {
   async authenticate(req: Request, res: Response) {
     const generateAccessToken = (user: any) => {
       return jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, {
-        expiresIn: "1h",
+        expiresIn: "30m",
       });
     };
 
     const generateRefreshToken = (user: any) => {
       return jwt.sign({ id: user.id }, REFRESH_SECRET, { expiresIn: "7d" });
     };
+
     try {
       const { email, password } = req.body;
 
@@ -56,7 +56,7 @@ class UserController {
 
         res.cookie("refreshToken", refreshToken, {
           httpOnly: true,
-          secure: true,
+          secure: false,
           sameSite: "strict",
           maxAge: 7 * 24 * 60 * 60 * 1000,
         });
@@ -80,7 +80,7 @@ class UserController {
 
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
-        secure: true,
+        secure: false,
         sameSite: "strict",
         maxAge: 7 * 24 * 60 * 60 * 1000,
       });
@@ -97,12 +97,12 @@ class UserController {
 
   async refresh(req: Request, res: Response) {
     try {
-      const refreshToken = req.cookies.refreshToken;
+      const oldRefreshToken = req.cookies.refreshToken;
 
-      if (!refreshToken) {
+      if (!oldRefreshToken) {
         return res.status(401).json({ message: "No refresh token" });
       }
-      const decoded = jwt.verify(refreshToken, REFRESH_SECRET) as {
+      const decoded = jwt.verify(oldRefreshToken, REFRESH_SECRET) as {
         id: string;
       };
 
@@ -118,9 +118,13 @@ class UserController {
         { expiresIn: "1h" },
       );
 
-      res.cookie("refreshToken", refreshToken, {
+      const newRefreshToken = jwt.sign({ id: user.id }, REFRESH_SECRET, {
+        expiresIn: "7d",
+      });
+
+      res.cookie("refreshToken", newRefreshToken, {
         httpOnly: true,
-        secure: true,
+        secure: false,
         sameSite: "strict",
         maxAge: 7 * 24 * 60 * 60 * 1000,
       });

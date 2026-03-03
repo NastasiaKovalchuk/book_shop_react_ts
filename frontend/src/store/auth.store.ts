@@ -21,6 +21,7 @@ export const useAuthStore = create(
         set({ user, accessToken, isAuthChecked: true }),
       logout: () => set({ user: null, accessToken: null }),
       refreshAccessToken: async () => {
+        console.log("<<<<<STORE refreshAccessToken></STORE>");
         try {
           const data = await api.refreshToken();
           set({ accessToken: data.accessToken });
