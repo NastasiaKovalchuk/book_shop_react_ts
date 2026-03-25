@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import { User } from "../db/models/User";
+import { User } from "../db/models/user-model";
+import TokenService from "../service/token-service";
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
 const REFRESH_SECRET = process.env.JWT_SECRET as string;
@@ -11,7 +12,6 @@ class UserController {
   async checkEmail(req: Request, res: Response) {
     try {
       const { email } = req.body;
-
       const user = await User.findOne({ email });
 
       return res.json({
@@ -22,17 +22,8 @@ class UserController {
     }
   }
 
-  // Login или Register
+  // Login or Register
   async authenticate(req: Request, res: Response) {
-    const generateAccessToken = (user: any) => {
-      return jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, {
-        expiresIn: "1h",
-      });
-    };
-
-    const generateRefreshToken = (user: any) => {
-      return jwt.sign({ id: user.id }, REFRESH_SECRET, { expiresIn: "7d" });
-    };
     try {
       const { email, password } = req.body;
 
@@ -51,8 +42,14 @@ class UserController {
           passwordHash,
         });
 
-        const accessToken = generateAccessToken(user);
-        const refreshToken = generateRefreshToken(user);
+        console.log("Register :", user);
+
+        const accessToken = TokenService.generateAccessToken({
+          id: user.id,
+          email: user.email,
+        });
+        const refreshToken = TokenService.generateRefreshToken({ id: user.id });
+        await TokenService.saveToken(user.id, refreshToken);
 
         res.cookie("refreshToken", refreshToken, {
           httpOnly: true,
@@ -75,8 +72,11 @@ class UserController {
         return res.status(401).json({ message: "Wrong password" });
       }
 
-      const accessToken = generateAccessToken(user);
-      const refreshToken = generateRefreshToken(user);
+      const accessToken = TokenService.generateAccessToken({
+        id: user.id,
+        email: user.email,
+      });
+      const refreshToken = TokenService.generateRefreshToken({ id: user.id });
 
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
@@ -92,6 +92,15 @@ class UserController {
       });
     } catch {
       return res.status(500).json({ message: "Auth error" });
+    }
+  }
+
+  async logout(req: Request, res: Response) {
+    try {
+      res.clearCookie("refreshToken");
+      return res.json({ message: "Logged out" });
+    } catch {
+      return res.status(500).json({ message: "Logout error" });
     }
   }
 
