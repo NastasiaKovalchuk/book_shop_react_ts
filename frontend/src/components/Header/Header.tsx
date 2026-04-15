@@ -9,21 +9,16 @@ import { useModal } from "../ModalContext";
 import { useAuthStore } from "../../store/auth.store.ts";
 import { ProfileMenu } from "../User/ProfileMenu";
 import { useNavigate } from "react-router";
+import type { Book } from "../../types/book.ts";
 
 const Header = () => {
-  const { accessToken, refreshAccessToken, isAuthChecked } = useAuthStore();
+  const { accessToken, isAuthChecked } = useAuthStore();
   const [showMenu, setShowMenu] = useState(false);
   const { openLogin, openCatalog } = useModal();
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<Book[]>([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!accessToken) {
-      refreshAccessToken();
-    }
-  }, [accessToken, refreshAccessToken]);
 
   const handleProfileClick = () => {
     setShowMenu(!showMenu);
@@ -42,7 +37,7 @@ const Header = () => {
           `https://openlibrary.org/search.json?q=${encodeURIComponent(query)}&page=1`,
         );
         const data = await res.json();
-        console.log("searchByParameters", data.docs);
+
         setResults((data.docs ?? []).slice(0, 5));
         setShowDropdown(true);
       } catch (err) {
@@ -61,7 +56,7 @@ const Header = () => {
         .trim()
         .replace(/[^a-z0-9\s-]/g, "")
         .replace(/\s+/g, "-");
-    console.log(`/book/${createSlug(title)}-${workId}`);
+
     navigate(`/book/${createSlug(title)}-${workId}`);
     setShowDropdown(false);
     setQuery("");
@@ -132,10 +127,11 @@ const Header = () => {
           </form>
         </div>
         <div className={style.actions}>
-          <div className={style.action} onClick={() => navigate("/cart")}>
-            <BsCart />
-          </div>
-
+          {isAuthChecked && isAuth && (
+            <div className={style.action} onClick={() => navigate("/cart")}>
+              <BsCart />
+            </div>
+          )}
           <button
             onClick={isAuthChecked && isAuth ? handleProfileClick : openLogin}
           >

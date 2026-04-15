@@ -39,8 +39,10 @@ export const ProfileMenu = ({ onClose }: ProfileMenuProps) => {
       logout();
       navigate("/");
       onClose();
+
       return;
     }
+
     navigate(item.path);
     onClose();
   };

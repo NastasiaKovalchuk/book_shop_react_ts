@@ -56,7 +56,10 @@ export const BookCard = ({ book }: BookCardProps) => {
         </div>
 
         <div className={style.meta}>
-          <div className={style.footer}>{book.language?.join(", ")}</div>
+          <div className={style.footer}>
+            {book.language?.slice(0, 5).join(", ")}
+            {book.language && book.language.length > 5 && " and others"}
+          </div>
           <div className={style.price}>${generatePrice(book.key)}</div>
         </div>
       </div>

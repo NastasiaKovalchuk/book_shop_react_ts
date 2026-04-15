@@ -6,7 +6,7 @@ import { generatePrice } from "../../utils/price.ts";
 import { type BookDetails } from "../../types/book";
 import { useCartStore } from "../../store/cart.store.ts";
 import * as api from "../../api/cart.ts";
-import { getValidToken } from "../../utils/checkingToken.ts";
+import { useAuthStore } from "../../store/auth.store.ts";
 
 // type BookDetails = {
 //   key: string;
@@ -22,7 +22,9 @@ export const BookPage = () => {
   const [book, setBook] = useState<BookDetails | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showMessage, setShowMessage] = useState(false);
   const addItem = useCartStore((state) => state.addItem);
+  const accessToken = useAuthStore((s) => s.accessToken);
 
   useEffect(() => {
     if (!id) return;
@@ -65,8 +67,6 @@ export const BookPage = () => {
             l.key.split("/").pop(),
           ) || [];
 
-        console.log("languages", languages);
-
         const coverId = workData.covers?.[0];
         const cover = coverId
           ? `https://covers.openlibrary.org/b/id/${coverId}-L.jpg`
@@ -97,15 +97,19 @@ export const BookPage = () => {
     return () => controller.abort();
   }, [id]);
 
-  const handleAddToCart = async (book: BookDetails) => {
-    const price = generatePrice(book.key);
-    const token = await getValidToken();
+  const triggerForMessage = () => {
+    setShowMessage(true);
+    setTimeout(() => setShowMessage(false), 3000); // Исчезнет через 3 секунды
+  };
 
-    if (!token) {
-      console.log("No valid token, please login");
+  const handleAddToCart = async (book: BookDetails) => {
+    if (!accessToken) {
+      alert("Please login to add books to your cart");
+      // Здесь можно вызвать openLogin() из ModalContext, если он подключен
       return;
     }
 
+    const price = generatePrice(book.key);
     const newItem = {
       bookId: book.key,
       title: book.title,
@@ -115,11 +119,12 @@ export const BookPage = () => {
     };
 
     try {
-      await api.addItem(newItem, token);
-
+      await api.addItem(newItem);
       addItem(newItem);
+      triggerForMessage();
     } catch (err) {
       console.error("Add to cart error:", err);
+      alert(err || "Something went wrong while adding to cart");
     }
   };
 
@@ -129,6 +134,11 @@ export const BookPage = () => {
 
   return (
     <div className={style.container}>
+      {showMessage && (
+        <div className={style.toast}>
+          The book "<strong>{book.title}</strong>" has been added to your cart!
+        </div>
+      )}
       <div className={style.card}>
         {book.cover && (
           <img src={book.cover} alt={book.title} className={style.cover} />

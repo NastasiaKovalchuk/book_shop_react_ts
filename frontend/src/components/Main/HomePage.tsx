@@ -14,6 +14,11 @@ const Main = () => {
       try {
         const url = "https://openlibrary.org/search.json?title=book";
         const res = await fetch(url);
+
+        if (!res.ok) {
+          throw new Error(`Server returned status ${res.status}`);
+        }
+
         const data = await res.json();
 
         setBooks(data.docs.slice(0, 30) || []);

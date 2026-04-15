@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { Cart } from "../db/models/Cart";
-import { User } from "../db/models/User";
 
 interface AuthRequest extends Request {
   user?: any;
