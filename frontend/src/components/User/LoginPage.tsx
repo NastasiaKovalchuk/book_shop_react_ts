@@ -5,8 +5,8 @@ import { useAuthStore } from "../../store/auth.store.ts";
 import * as api from "../../api/auth.ts";
 
 export const LoginPage = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const { modal, closeModal } = useModal();
   const [isUser, setIsUser] = useState(false);
   const [step, setStep] = useState<"email" | "password">("email");
@@ -25,7 +25,7 @@ export const LoginPage = () => {
       setIsUser(data.exists);
       setStep("password");
     } catch (err) {
-      console.error("Error fetch:", err);
+      console.error("Error fetching email check:", err);
     }
   };
 
@@ -72,8 +72,8 @@ export const LoginPage = () => {
     password: string,
   ): Promise<void> => {
     try {
-      const res = await api.getJwtToken(email, password);
-      const data = await res.json();
+      const data = await api.getJwtToken(email, password);
+      console.log("getJwtToken", data);
       login({ id: data.user, email: email }, data.accessToken);
 
       closeModal();

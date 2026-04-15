@@ -8,7 +8,7 @@ interface AuthState {
   isAuthChecked: boolean;
   login: (user: AuthState["user"], token: string) => void;
   logout: () => void;
-  refreshAccessToken: () => Promise<void>;
+  refreshAccessToken: () => Promise<string | null>;
 }
 
 export const useAuthStore = create(
@@ -19,14 +19,19 @@ export const useAuthStore = create(
       isAuthChecked: false,
       login: (user, accessToken) =>
         set({ user, accessToken, isAuthChecked: true }),
-      logout: () => set({ user: null, accessToken: null }),
-      refreshAccessToken: async () => {
-        console.log("<<<<<STORE refreshAccessToken></STORE>");
+      logout: async () => {
+        await api.logout();
+        set({ user: null, accessToken: null, isAuthChecked: false });
+      },
+
+      refreshAccessToken: async (): Promise<string | null> => {
         try {
           const data = await api.refreshToken();
           set({ accessToken: data.accessToken });
+          return data.accessToken;
         } catch {
           get().logout();
+          return null;
         }
       },
     }),

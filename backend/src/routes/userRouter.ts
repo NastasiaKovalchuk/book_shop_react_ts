@@ -5,6 +5,7 @@ const router = Router();
 
 router.post("/check-email", UserController.checkEmail);
 router.post("/authenticate", UserController.authenticate);
-router.post("/refresh", UserController.refresh);
+// router.post("/refresh", UserController.refresh);
+router.post("/logout", UserController.logout);
 
 export default router;

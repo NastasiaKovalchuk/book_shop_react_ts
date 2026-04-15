@@ -1,67 +1,50 @@
+import { apiRequest } from "./base";
+
 export interface CheckEmailResponse {
   exists: boolean;
 }
 
 export interface AuthResponse {
   user: { id: string; email: string };
-  token: string;
+  accessToken: string;
+  refreshToken: string;
 }
 
 export const checkEmail = async (
   email: string,
 ): Promise<CheckEmailResponse> => {
-  const res = await fetch(
-    "https://book-shop-react-ts.onrender.com/auth/check-email",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: email,
-      }),
-    },
-  );
-
-  if (!res.ok) {
-    const err = await res.json();
-    throw new Error(err.message || "Authentication failed");
-  }
-
-  return res.json();
+  console.log(email);
+  return apiRequest("/auth/check-email", {
+    method: "POST",
+    body: JSON.stringify({ email }),
+  });
 };
 
 export const getJwtToken = async (email: string, password: string) => {
-  const res = await fetch(
-    "https://book-shop-react-ts.onrender.com/auth/authenticate",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email,
-        password,
-      }),
-    },
-  );
-  if (!res.ok) {
-    const error = await res.json();
-    throw new Error(error.message);
-  }
+  return apiRequest("/auth/authenticate", {
+    method: "POST",
+    credentials: "include", // важно для работы с Refresh куками
+    body: JSON.stringify({ email, password }),
+  });
+};
 
-  return res;
+export const logout = async () => {
+  return apiRequest("/auth/logout", {
+    method: "POST",
+    credentials: "include",
+  });
 };
 
 export const refreshToken = async () => {
-  console.log("refreshAccessToken");
-  const res = await fetch(
-    "https://book-shop-react-ts.onrender.com/auth/refresh",
-    {
-      method: "POST",
-      credentials: "include",
-    },
-  );
+  console.log("API refreshAccessToken");
+  const BASE_URL = import.meta.env.PROD
+    ? "https://book-shop-react-ts.onrender.com"
+    : "http://localhost:4000";
+
+  const res = await fetch(`${BASE_URL}/auth/refresh`, {
+    method: "POST",
+    credentials: "include",
+  });
 
   if (!res.ok) throw new Error("Refresh failed");
   return res.json();

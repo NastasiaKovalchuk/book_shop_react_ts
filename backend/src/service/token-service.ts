@@ -1,32 +1,63 @@
 import jwt from "jsonwebtoken";
 import { Token } from "../db/models/token-model";
 
-const JWT_SECRET = process.env.JWT_SECRET as string;
-const REFRESH_SECRET = process.env.JWT_SECRET as string;
+interface TokenPayload {
+  id: string;
+  email: string;
+}
 
 class TokenService {
-  generateAccessToken(payload: any) {
-    const accessToken = jwt.sign(payload, JWT_SECRET, {
+  generateTokens(payload: TokenPayload) {
+    const accessToken = jwt.sign(payload, process.env.JWT_SECRET as string, {
       expiresIn: "30m",
     });
-    return accessToken;
-  }
 
-  generateRefreshToken(payload: any) {
-    const refreshToken = jwt.sign(payload, REFRESH_SECRET, {
-      expiresIn: "30d",
-    });
-    return refreshToken;
+    const refreshToken = jwt.sign(
+      payload,
+      process.env.REFRESH_SECRET as string,
+      { expiresIn: "30d" },
+    );
+
+    return {
+      accessToken,
+      refreshToken,
+    };
   }
 
   async saveToken(userId: string, refreshToken: string) {
     const token = await Token.findOne({ user: userId });
+
     if (token) {
       token.refreshToken = refreshToken;
-      await token.save();
+      return token.save();
     }
     const newToken = await Token.create({ user: userId, refreshToken });
     return newToken;
+  }
+
+  async removeToken(refreshToken: string) {
+    const tokenData = await Token.deleteOne({ refreshToken });
+    return tokenData;
+  }
+
+  async validateRefreshToken(refreshToken: string) {
+    try {
+      const userData = jwt.verify(
+        refreshToken,
+        process.env.REFRESH_SECRET as string,
+      ) as TokenPayload;
+
+      return userData;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  async findToken(refreshToken: string) {
+    try {
+      const tokenData = await Token.findOne({ refreshToken });
+      return tokenData;
+    } catch (error) {}
   }
 }
 

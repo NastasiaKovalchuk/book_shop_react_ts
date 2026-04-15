@@ -2,7 +2,6 @@ import { useCartStore } from "../../store/cart.store.ts";
 import style from "./CartPage.module.scss";
 import * as api from "../../api/cart.ts";
 import { useAuthStore } from "../../store/auth.store.ts";
-import { getValidToken } from "../../utils/checkingToken.ts";
 
 export const CartPage = () => {
   const cart = useCartStore((state) => state.items);
@@ -14,55 +13,60 @@ export const CartPage = () => {
   const accessToken = useAuthStore((s) => s.accessToken);
 
   const handleIncrease = async (bookId: string) => {
-    const token = await getValidToken();
-    if (!token) {
-      console.log("No valid token, please login");
+    if (!accessToken) {
+      console.log("Please login to manage cart");
       return;
     }
-    const item = cart.find((i) => i.bookId === bookId);
 
-    if (!item || !accessToken) return;
+    const item = cart.find((i) => i.bookId === bookId);
+    if (!item) return;
 
     increaseItem(bookId);
-    await api.addItem(item, accessToken);
+    try {
+      await api.addItem(item);
+    } catch (err) {
+      console.error("Failed to sync cart with server:", err);
+    }
   };
 
   const handleDecrease = async (bookId: string) => {
+    if (!accessToken) {
+      console.log("Please login to manage cart");
+      return;
+    }
+
     const item = cart.find((i) => i.bookId === bookId);
-    if (!item || !accessToken) return;
+    if (!item) return;
+
     if (item && item.quantity > 1) {
       decreaseItem(bookId);
-      await api.decreaseItem(bookId, accessToken);
+      await api.decreaseItem(bookId);
     } else {
       removeItem(bookId);
     }
   };
 
   const handleClearCart = async () => {
-    const token = await getValidToken();
-    if (!token) {
-      console.log("No valid token, please login");
-      return;
-    }
-
     if (!accessToken) return;
 
     clearCart();
-    const data = await api.clearCart(accessToken);
-    if (data.message) {
-      console.log("clearCart message:", data.message);
+    try {
+      const data = await api.clearCart();
+      console.log("Success:", data.message);
+    } catch (err) {
+      console.error("Clear cart error:", err);
     }
   };
 
   const handleRemoveItem = async (bookId: string) => {
-    const token = await getValidToken();
-    if (!token) {
-      console.log("No valid token, please login");
-      return;
-    }
     if (!accessToken) return;
     removeItem(bookId);
-    await api.removeItem(bookId, accessToken);
+
+    try {
+      await api.removeItem(bookId);
+    } catch (err) {
+      console.error("Clear cart error:", err);
+    }
   };
 
   const totalPrice = cart.reduce(
