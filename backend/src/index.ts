@@ -10,6 +10,8 @@ import errorMiddleware from "./middleware/error-middleware";
 
 dotenv.config();
 
+const PORT = Number(process.env.PORT) || 4000;
+
 const app = express();
 app.use(
   cors({
@@ -35,6 +37,7 @@ mongoose
   .catch(console.error);
 
 // =====================================================
-app.listen(process.env.PORT || 4000, () => {
-  console.log("Server running");
+
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Server running on port ${PORT}`);
 });

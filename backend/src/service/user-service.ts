@@ -15,9 +15,12 @@ class UserService {
     let mode: "login" | "register" = "login";
 
     if (!user) {
+      console.log(email, password);
       mode = "register";
       const passwordHash = await bcrypt.hash(password, 10);
+
       user = await User.create({ email, passwordHash });
+      console.log("user", user);
     } else {
       const isValidPassword = await bcrypt.compare(password, user.passwordHash);
       if (!isValidPassword) throw ApiError.BadRequest("Wrong password");

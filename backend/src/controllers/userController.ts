@@ -5,6 +5,7 @@ class UserController {
   async checkEmail(req: Request, res: Response, next: NextFunction) {
     try {
       const { email } = req.body;
+
       const exists = await userService.checkEmail(email);
       return res.json({ exists });
     } catch (e) {

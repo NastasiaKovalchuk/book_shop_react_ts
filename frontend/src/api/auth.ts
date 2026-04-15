@@ -13,7 +13,7 @@ export interface AuthResponse {
 export const checkEmail = async (
   email: string,
 ): Promise<CheckEmailResponse> => {
-  console.log(email);
+  console.log("import.meta.env.VITE_API_URL", import.meta.env.VITE_API_URL);
   return apiRequest("/auth/check-email", {
     method: "POST",
     body: JSON.stringify({ email }),
