@@ -22,7 +22,7 @@ export const checkEmail = async (
 export const getJwtToken = async (email: string, password: string) => {
   return apiRequest("/auth/authenticate", {
     method: "POST",
-    credentials: "include", // важно для работы с Refresh куками
+    credentials: "include",
     body: JSON.stringify({ email, password }),
   });
 };
@@ -45,6 +45,9 @@ export const refreshToken = async () => {
     credentials: "include",
   });
 
+  const data = await res.json();
+
   if (!res.ok) throw new Error("Refresh failed");
-  return res.json();
+
+  return data;
 };
