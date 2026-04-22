@@ -70,7 +70,10 @@ export const useCartStore = create<CartStore>()(
       },
 
       getTotalCount: () => {
-        return get().items.reduce((sum, item) => sum + item.quantity, 0);
+        const items = get().items;
+
+        if (!Array.isArray(items)) return 0;
+        return items.reduce((sum, item) => sum + item.quantity, 0);
       },
     }),
     { name: "cart-storage" },

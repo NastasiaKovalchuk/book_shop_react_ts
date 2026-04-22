@@ -1,6 +1,13 @@
 import { type CartItem } from "../types/cart";
 import { apiRequest } from "./base";
 
+export const getCart = async () => {
+  return apiRequest("/cart", {
+    method: "GET",
+    credentials: "include",
+  });
+};
+
 export const addItem = async (item: CartItem) => {
   // const res = await fetch("https://book-shop-react-ts.onrender.com/cart/add", {
   return apiRequest("/cart/add", {

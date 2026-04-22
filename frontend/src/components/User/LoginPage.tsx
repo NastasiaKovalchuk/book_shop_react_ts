@@ -3,6 +3,8 @@ import { useModal } from "../ModalContext";
 import { useAuthStore } from "../../store/auth.store.ts";
 import * as api from "../../api/auth.ts";
 import { Mail, Lock, ArrowRight, Sparkles } from "lucide-react";
+import { useCartStore } from "../../store/cart.store";
+import * as cartApi from "../../api/cart";
 
 export const LoginPage = () => {
   const [email, setEmail] = useState<string>("");
@@ -12,6 +14,7 @@ export const LoginPage = () => {
   const [step, setStep] = useState<"email" | "password">("email");
 
   const login = useAuthStore((s) => s.login);
+  const setItems = useCartStore((state) => state.setItems);
   const [errors, setErrors] = useState<{ email?: string; password?: string }>(
     {},
   );
@@ -62,6 +65,15 @@ export const LoginPage = () => {
     try {
       const data = await api.getJwtToken(email, password);
       login({ id: data.user, email: email }, data.accessToken);
+      try {
+        const getRemoteCart = await cartApi.getCart();
+        console.log("getRemoteCartItems", getRemoteCart);
+        if (getRemoteCart && getRemoteCart.items) {
+          setItems(getRemoteCart.items);
+        }
+      } catch (cartErr) {
+        console.error("Failed to sync cart after login:", cartErr);
+      }
       closeModal();
     } catch (err) {
       setErrors({ password: "The key or email doesn't match our records" });

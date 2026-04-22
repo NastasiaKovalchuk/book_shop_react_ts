@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import * as api from "../api/auth";
+import { useCartStore } from "./cart.store";
 
 interface AuthState {
   user: { id: string; email: string } | null;
@@ -20,8 +21,14 @@ export const useAuthStore = create(
       login: (user, accessToken) =>
         set({ user, accessToken, isAuthChecked: true }),
       logout: async () => {
-        await api.logout();
-        set({ user: null, accessToken: null, isAuthChecked: false });
+        try {
+          await api.logout();
+        } catch (err) {
+          console.error("API Logout failed", err);
+        } finally {
+          useCartStore.getState().clearCart();
+          set({ user: null, accessToken: null, isAuthChecked: false });
+        }
       },
 
       refreshAccessToken: async (): Promise<string | null> => {

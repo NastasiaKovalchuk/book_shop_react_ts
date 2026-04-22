@@ -22,9 +22,10 @@ export const CartPage = () => {
     if (!accessToken) return;
     const item = cart.find((i) => i.bookId === bookId);
     if (!item) return;
-    increaseItem(bookId);
+
     try {
       await api.addItem(item);
+      increaseItem(bookId);
     } catch (err) {
       console.error(err);
     }
@@ -34,9 +35,10 @@ export const CartPage = () => {
     if (!accessToken) return;
     const item = cart.find((i) => i.bookId === bookId);
     if (!item || item.quantity <= 1) return;
-    decreaseItem(bookId);
+
     try {
       await api.decreaseItem(bookId);
+      decreaseItem(bookId);
     } catch (err) {
       console.error(err);
     }
@@ -44,9 +46,10 @@ export const CartPage = () => {
 
   const handleRemoveItem = async (bookId: string) => {
     if (!accessToken) return;
-    removeItem(bookId);
+
     try {
       await api.removeItem(bookId);
+      removeItem(bookId);
     } catch (err) {
       console.error(err);
     }
