@@ -1,5 +1,4 @@
 import { createContext, useContext, useState, type ReactNode } from "react";
-// import style from "./Modal.module.scss";
 
 type ModalType = "login" | "catalog" | null;
 
