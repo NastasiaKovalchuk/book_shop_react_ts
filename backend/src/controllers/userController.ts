@@ -20,9 +20,9 @@ class UserController {
 
       res.cookie("refreshToken", userData.refreshToken, {
         httpOnly: true,
-        secure: false,
+        secure: true,
         // sameSite: "strict",
-        sameSite: "lax",
+        sameSite: "none",
         maxAge: 7 * 24 * 60 * 60 * 1000,
         path: "/",
       });
@@ -41,7 +41,12 @@ class UserController {
     try {
       const { refreshToken } = req.cookies;
       await userService.logout(refreshToken);
-      res.clearCookie("refreshToken");
+      res.clearCookie("refreshToken", {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+        path: "/",
+      });
       return res.json({ message: "Logged out" });
     } catch (e) {
       next(e);
