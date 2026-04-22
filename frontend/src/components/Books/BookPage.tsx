@@ -6,6 +6,7 @@ import { type BookDetails } from "../../types/book";
 import { useCartStore } from "../../store/cart.store.ts";
 import * as api from "../../api/cart.ts";
 import { useAuthStore } from "../../store/auth.store.ts";
+import { useModal } from "../ModalContext";
 import {
   ArrowLeft,
   ShoppingCart,
@@ -17,6 +18,7 @@ import {
 
 export const BookPage = () => {
   const { id } = useParams<{ id: string }>();
+  const { openLogin } = useModal();
 
   const [book, setBook] = useState<BookDetails | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -93,7 +95,7 @@ export const BookPage = () => {
 
   const handleAddToCart = async (book: BookDetails) => {
     if (!accessToken) {
-      alert("Please login to add books to your cart");
+      openLogin();
       return;
     }
     const price = generatePrice(book.key);
@@ -105,10 +107,11 @@ export const BookPage = () => {
       quantity: 1,
     };
 
+    addItem(newItem);
+    triggerForMessage();
+
     try {
       await api.addItem(newItem);
-      addItem(newItem);
-      triggerForMessage();
     } catch (err) {
       console.error(err);
     }
