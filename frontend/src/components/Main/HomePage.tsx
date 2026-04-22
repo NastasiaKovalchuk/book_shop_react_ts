@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import BookLoader from "../Books/BooksLoader.tsx";
 import { BookCard } from "../Books/BookCard";
-import style from "./Home.module.scss";
 import { BOOKS } from "../../constants/books.ts";
 import { type Book } from "../../types/book";
 
@@ -37,17 +36,18 @@ const Main = () => {
   if (loading) return <BookLoader />;
 
   return (
-    <div className={style.books_grid}>
-      {books.map((book) => {
-        return (
-          <BookCard
-            key={book.key}
-            book={book}
-            // isSelected={book.id === props.selectedTrackId}
-            // onSelect={handleClick}
-          />
-        );
-      })}
+    <div className="min-h-screen bg-[#fdfcf0] py-12 px-4 sm:px-6">
+      <div className="max-w-7xl mx-auto">
+        <h2 className="text-3xl font-serif italic text-orange-900 mb-10 text-center">
+          Handpicked for your cozy evening
+        </h2>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-10">
+          {books.map((book) => (
+            <BookCard key={book.key} book={book} />
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
